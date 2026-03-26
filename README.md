@@ -105,16 +105,16 @@ These values describe the existing prototype baseline and may evolve during the 
 
 ### 1. Current Prototype Assembly
 
-> PCurrent product image: `docs/img/prototype_sensor.jpg`
+> Current product image: `docs/img/prototype_sensor.jpeg`
 
-![Prototype Assembly](docs/img/prototype_sensor.jpg)
+![Prototype Assembly](docs/img/prototype_sensor.jpeg)
 
 
-### 2. Optional PCB Image
+### 2. Current PCB Image
 
-> Optional: First PCB protptype: `docs/img/pcb_top.jpg`
+> Current PCB protptype: `docs/img/pcb_top.jpeg`
 
-![PCB](docs/img/pcb_top.jpg)
+![PCB](docs/img/pcb_top.jpeg)
 
 ---
 
@@ -143,7 +143,7 @@ The key objective is to prove that **partial silicon integration** already provi
 The platform is composed of four layers.
 
 ### 1. Thermal Flow Transducer
-A hot-wire airflow transducer based on a heated microelement and auxiliary thermal sensing structures.
+A hot-wire airflow transducer based on a heated microelement and auxiliary thermal sensing structures custom fabricated in an academic microfabrication lab (clean room).
 
 ### 2. Custom Silicon
 A SKY130 chip integrated in the Caravel user area. The chip provides control, diagnostics, channel selection, digital configuration, and system observability.
