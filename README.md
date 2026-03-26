@@ -4,11 +4,13 @@
 
 # Open-Source Smart Airflow Sensor Platform with Custom SKY130 Silicon
 
+**A Caravel-based mixed-system reference design for hot-wire airflow sensing**
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![ChipFoundry Marketplace](https://img.shields.io/badge/ChipFoundry-Marketplace-6E40C9.svg)](https://platform.chipfoundry.io/marketplace)
-[![Project Status](https://img.shields.io/badge/Status-Concept%20%2F%20Development-orange.svg)]()
 [![Process](https://img.shields.io/badge/Process-SKY130-0A7EA4.svg)]()
-[![Integration](https://img.shields.io/badge/Integration-Caravel%20User%20Project-4C6EF5.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Caravel-4C6EF5.svg)]()
+[![Status](https://img.shields.io/badge/Status-Concept%20%2F%20Development-orange.svg)]()
+[![ChipFoundry Marketplace](https://img.shields.io/badge/ChipFoundry-Marketplace-6E40C9.svg)](https://platform.chipfoundry.io/marketplace)
 
 </div>
 
@@ -16,22 +18,26 @@
 
 ## Table of Contents
 - [Overview](#overview)
-- [Project Motivation](#project-motivation)
+- [Why This Project Matters](#why-this-project-matters)
 - [Current Prototype Baseline](#current-prototype-baseline)
+- [System Images](#system-images)
+- [Project Goals](#project-goals)
 - [System Architecture](#system-architecture)
-- [ASIC Scope](#asic-scope)
+- [On-Chip vs Off-Chip Partition](#on-chip-vs-off-chip-partition)
+- [ASIC Block Table](#asic-block-table)
+- [Why This Scope Is Realistic](#why-this-scope-is-realistic)
 - [Target Applications](#target-applications)
 - [Repository Structure](#repository-structure)
-- [Documentation \& Resources](#documentation--resources)
+- [Documentation & Resources](#documentation--resources)
 - [Prerequisites](#prerequisites)
 - [Starting Your Project](#starting-your-project)
 - [Development Flow](#development-flow)
 - [GPIO Configuration](#gpio-configuration)
 - [Verification Plan](#verification-plan)
-- [Local Precheck](#local-precheck)
 - [Mechanical, PCB, and Firmware Deliverables](#mechanical-pcb-and-firmware-deliverables)
 - [Project Roadmap](#project-roadmap)
 - [Checklist for Shuttle Submission](#checklist-for-shuttle-submission)
+- [Project Status](#project-status)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
@@ -39,7 +45,7 @@
 
 ## Overview
 
-This repository contains an **open-source airflow sensing reference design** based on:
+This repository contains an **open-source airflow sensing reference design** built around:
 
 - a **hot-wire thermal flow transducer**,
 - a **custom SKY130 chip** integrated as a **Caravel user project**,
@@ -47,134 +53,181 @@ This repository contains an **open-source airflow sensing reference design** bas
 - **firmware** for configuration and data collection,
 - and a **mechanical flow body / enclosure**.
 
-The project goal is to demonstrate how **custom silicon** can improve a real airflow sensing platform by reducing board complexity, improving configurability, and enabling tighter integration between the transducer, electronics, and mechanical structure.
+The project demonstrates how **custom silicon** can improve a real airflow sensing platform by reducing board complexity, improving configurability, enabling diagnostics, and creating a more reproducible path from prototype to deployable system.
 
-This project is intended as a **reference design demonstrator** and **open development platform**, not as a finished certified medical device.
+This project is intended as an **open reference design demonstrator**, not as a finished certified medical device.
 
 ---
 
-## Project Motivation
+## Why This Project Matters
 
-Many practical airflow sensing systems rely on discrete analog front ends. While functional, that approach often increases:
+Many airflow sensing systems work well in the lab but remain difficult to reproduce because they depend on:
 
-- PCB size,
-- tuning effort,
-- sensitivity to parasitics,
-- assembly variability,
-- and difficulty of reproduction.
+- discrete analog front ends,
+- manual trimming,
+- PCB parasitics,
+- ad-hoc packaging,
+- and undocumented calibration workflows.
 
-This project aims to evolve an already working hot-wire airflow prototype into a more integrated and reproducible open platform by moving part of the sensor-interface and control functionality into a custom **SKY130 ASIC**.
+This project addresses that gap by co-designing:
 
-The resulting system is intended to serve as:
+1. the **thermal transducer**,
+2. the **custom silicon interface**,
+3. the **PCB and firmware**,
+4. and the **mechanical flow body**.
 
-- a silicon-enabled airflow sensing demonstrator,
-- an open hardware development platform,
-- and a reusable reference design for future industrial, laboratory, and embedded sensing applications.
+The result is meant to be a **complete open platform**, not only a chip or only a sensor.
 
 ---
 
 ## Current Prototype Baseline
 
-The present hardware prototype already demonstrates the main sensing concept and system-level integration. The current baseline includes:
+The current prototype already demonstrates the main system concept:
 
-- hot-wire airflow sensing principle,
+- hot-wire airflow sensing,
 - microfabricated heated transducer,
-- discrete analog front-end,
-- support PCB,
+- discrete analog electronics,
 - packaged flow body,
-- and integrated mechanical assembly.
+- and a complete bench-testable assembly.
 
-Current prototype targets / baseline characteristics:
+Current baseline characteristics:
 
-- **Supply:** ±5 V
-- **Analog output:** 0–5 V
-- **Flow range:** 0–160 L/min
-- **Mechanical connector concept:** 22 mm interface
+- **Supply:** ±5 V  
+- **Analog output:** 0–5 V  
+- **Flow range:** 0–160 L/min  
+- **Mechanical interface concept:** 22 mm  
 
-> **Note**
-> These values describe the current prototype baseline and may evolve during the contest-driven redesign.
+These values describe the existing prototype baseline and may evolve during the contest-driven redesign.
 
-### Prototype Image
+---
 
-Add a representative system image here once the repository assets are organized.
+## System Images
 
-```md
+### 1. Current Prototype Assembly
+
+> Place your current product image at: `docs/img/prototype_sensor.jpg`
+
 ![Prototype Assembly](docs/img/prototype_sensor.jpg)
-```
+
+### 2. System Architecture Diagram
+
+> Place your architecture diagram at: `docs/img/system_architecture.png`
+
+![System Architecture](docs/img/system_architecture.png)
+
+### 3. ASIC Partition / On-Chip vs Off-Chip Diagram
+
+> Place your partition diagram at: `docs/img/asic_partition.png`
+
+![ASIC Partition](docs/img/asic_partition.png)
+
+### 4. Optional PCB Image
+
+> Optional: place a PCB image at: `docs/img/pcb_top.jpg`
+
+![Support PCB](docs/img/pcb_top.jpg)
+
+---
+
+## Project Goals
+
+The first contest version aims to deliver:
+
+- an open airflow sensing demonstrator,
+- a custom SKY130 user project integrated in Caravel,
+- a support PCB for off-chip precision and system functions,
+- firmware for control, status, and data capture,
+- and an open mechanical assembly for airflow testing.
+
+The key objective is to prove that **partial silicon integration** already provides value by improving:
+
+- reproducibility,
+- modularity,
+- digital configurability,
+- diagnostics,
+- and long-term platform scalability.
 
 ---
 
 ## System Architecture
 
-The platform is composed of four layers:
+The platform is composed of four layers.
 
 ### 1. Thermal Flow Transducer
-A hot-wire airflow transducer based on a micro-heated element and auxiliary thermal sensing elements.
+A hot-wire airflow transducer based on a heated microelement and auxiliary thermal sensing structures.
 
 ### 2. Custom Silicon
-A SKY130 chip integrated inside the Caravel user area to implement configurable sensor-interface and digital control functions.
+A SKY130 chip integrated in the Caravel user area. The chip provides control, diagnostics, channel selection, digital configuration, and system observability.
 
 ### 3. Support Electronics
-A PCB containing the blocks intentionally left off-chip in revision 1, such as precision references, final power conditioning, host interface, protection, and test hooks.
+A PCB containing the blocks intentionally kept off-chip in revision 1, such as precision references, high-resolution conversion, power conditioning, host interface, and protection.
 
 ### 4. Mechanical Platform
-A reproducible flow body and electronics enclosure that supports assembly, airflow testing, and demonstration.
-
-### High-Level Block Diagram
-
-Add a system diagram here when available.
-
-```md
-![System Architecture](docs/img/system_architecture.png)
-```
-
-Suggested block breakdown:
-
-- hot-wire transducer
-- optional RTD / thermal auxiliary channels
-- ASIC sensor-control and diagnostics
-- external ADC / MCU in revision 1
-- power and protection
-- mechanical flow body
+A reproducible flow body and enclosure that supports assembly, bench testing, and future application-specific integration.
 
 ---
 
-## ASIC Scope
+## On-Chip vs Off-Chip Partition
 
-To keep the project realistic for the Caravel + OpenLane contest flow, the ASIC will focus on **high-value, manageable integration blocks** rather than trying to replace the full precision analog chain in the first revision.
+The most important design decision in this project is the partition between what is integrated in silicon and what remains external in revision 1.
 
-### On-Chip Functions
+### On-Chip Focus
+The ASIC will focus on blocks that provide **high integration value** with **manageable implementation risk**:
 
-#### Sensor Interface / Mixed-Signal Support
-- programmable excitation control for the hot-wire element,
-- analog channel selection / multiplexing,
-- threshold-based diagnostic comparators,
-- programmable trimming and bias control,
-- observability and test modes.
+- excitation control,
+- signal routing,
+- digital configurability,
+- threshold diagnostics,
+- fault reporting,
+- and test visibility.
 
-#### Digital Functions
-- configuration registers,
-- SPI or I²C slave interface,
-- startup / control state machine,
-- diagnostic and fault flags,
-- digital calibration and control settings,
-- Caravel-facing integration logic.
+### Off-Chip Focus
+The PCB will retain the blocks that are either:
 
-### Off-Chip Functions in Revision 1
-- precision voltage / current reference,
-- high-resolution ADC,
-- final power conditioning,
-- host MCU or external controller,
-- system-level protection,
-- user interface.
+- high precision,
+- high risk for a first shuttle,
+- strongly application-dependent,
+- or easier to validate externally in revision 1.
 
-### Why This Partition
-This partition is intended to:
+This partition keeps the project ambitious, but still realistic.
 
-- reduce implementation risk,
-- fit the Caravel user-project flow more naturally,
-- keep verification tractable,
-- and maximize the chance of a tapeout-ready submission.
+---
+
+## ASIC Block Table
+
+| Block | Location | Main Function | Why It Matters | Risk Level | Revision 1 Plan |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Hot-wire excitation control | On-chip | Programmable control of the heater drive or heater-control path | Enables silicon-level control and repeatable operating modes | Medium | Include |
+| Analog channel multiplexer | On-chip | Selects sensor / auxiliary thermal / test channels | Reduces external routing complexity and improves observability | Low | Include |
+| Diagnostic comparators | On-chip | Threshold detection for status, fault, or direction-related conditions | Adds practical system intelligence with modest complexity | Low | Include |
+| Bias and trim control | On-chip | Internal programmable settings for operating modes and tuning | Improves repeatability and calibration flexibility | Medium | Include |
+| Configuration registers | On-chip | Stores system configuration and control bits | Core digital infrastructure for the platform | Low | Include |
+| SPI or I²C slave | On-chip | Communication with external host | Makes the ASIC easy to configure and demonstrate | Low | Include |
+| Startup / control FSM | On-chip | Initializes and sequences the internal blocks | Simplifies bring-up and deterministic operation | Low | Include |
+| Fault / status flags | On-chip | Reports internal and sensor-related conditions | Useful for demo, debug, and future system robustness | Low | Include |
+| Test / observability hooks | On-chip | Exposes internal states and nodes for verification | Critical for bring-up and mixed-system debug | Low | Include |
+| Precision reference | Off-chip | Stable reference for accurate measurement chain | Precision block better kept external in first shuttle | Medium | External |
+| High-resolution ADC | Off-chip | Converts conditioned analog data for final measurement | Higher complexity and verification effort | High | External |
+| Final analog gain stage | Off-chip | Precision conditioning of the sensed signal | Better controlled on PCB for first revision | Medium | External |
+| Power regulation / filtering | Off-chip | Supplies clean rails to system blocks | Board-level requirement, easier to iterate externally | Low | External |
+| Host MCU / data logger | Off-chip | System supervision, data capture, UI/demo | Better handled outside ASIC in revision 1 | Low | External |
+| ESD / system-level protection | Off-chip | Protects the complete platform and connectors | System-dependent and board-specific | Low | External |
+
+---
+
+## Why This Scope Is Realistic
+
+This project is intentionally scoped so that the custom silicon does **not** attempt to replace the entire precision analog front end in the first tapeout.
+
+That makes the proposal stronger for a contest-oriented flow because it:
+
+- focuses the ASIC on functions that are highly demonstrable,
+- keeps digital verification central,
+- limits precision-analog risk,
+- preserves flexibility on the support PCB,
+- and creates a cleaner path to a tapeout-ready deliverable.
+
+In other words, revision 1 is designed to be a **credible platform demonstrator**, not an overextended one-shot full-custom instrument ASIC.
 
 ---
 
@@ -186,8 +239,8 @@ This project is positioned as an **open airflow sensing platform** for:
 - embedded gas-flow instrumentation,
 - laboratory setups,
 - educational platforms,
-- airflow research systems,
 - edge sensing and telemetry nodes,
+- research systems,
 - respiratory-flow experimentation in non-certified environments.
 
 ---
@@ -198,42 +251,33 @@ A successful Caravel project requires the standard directory layout for the auto
 
 | Directory | Description |
 | :--- | :--- |
-| `openlane/` | Configuration files for hardening macros and the wrapper. |
-| `verilog/rtl/` | Source RTL for the project. |
-| `verilog/gl/` | Gate-level netlists generated after hardening. |
-| `verilog/dv/` | Design verification files, including cocotb and Verilog testbenches. |
-| `verilog/includes/` | Include lists used by simulation and build scripts. |
-| `gds/` | Final GDSII files for fabrication. |
-| `lef/` | LEF files for hardened macros. |
-| `mag/` | Magic layout artifacts, if generated by the flow. |
-| `spi/` | SPI/lvs-related generated data, depending on flow usage. |
-| `docs/` | Project documentation, diagrams, images, measurement notes. |
-| `docs/img/` | Figures and images used in this README. |
-| `firmware/` | Firmware source for configuration, acquisition, and demos. |
-| `pcb/` | PCB design sources and manufacturing outputs. |
-| `mechanical/` | Mechanical CAD files and enclosure/flow-body design files. |
-| `models/` | Sensor and behavioral models, if used for system simulation. |
-| `scripts/` | Utility scripts for generation, testing, and automation. |
-
-> **Note**
-> Some directories are flow-generated, while others are project-specific. The exact structure can be refined as the repository matures.
+| `openlane/` | Configuration files for hardening macros and the wrapper |
+| `verilog/rtl/` | Source RTL for the project |
+| `verilog/gl/` | Gate-level netlists generated after hardening |
+| `verilog/dv/` | Design verification files, including cocotb and Verilog testbenches |
+| `verilog/includes/` | Include lists for simulation and build scripts |
+| `gds/` | Final GDSII files for fabrication |
+| `lef/` | LEF files for hardened macros |
+| `mag/` | Magic layout artifacts, if generated |
+| `docs/` | Project documentation, diagrams, and notes |
+| `docs/img/` | Images used in this README |
+| `firmware/` | Firmware source for configuration and demo operation |
+| `pcb/` | PCB source files and manufacturing outputs |
+| `mechanical/` | Mechanical CAD files and enclosure / flow-body design files |
+| `models/` | Behavioral or sensor models for simulation |
+| `scripts/` | Utility scripts for automation and testing |
 
 ---
 
 ## Documentation & Resources
 
-For detailed hardware specifications and register maps, refer to the official Caravel resources:
+Official Caravel / ChipFoundry references:
 
 - **[Caravel Datasheet](https://github.com/chipfoundry/caravel/blob/main/docs/caravel_datasheet_2.pdf)**  
-  Electrical and physical specifications of the Caravel harness.
-
 - **[Caravel Technical Reference Manual (TRM)](https://github.com/chipfoundry/caravel/blob/main/docs/caravel_datasheet_2_register_TRM_r2.pdf)**  
-  Register maps and programming model for the management SoC.
-
 - **[ChipFoundry Marketplace](https://platform.chipfoundry.io/marketplace)**  
-  Access additional IP blocks, tools, and shuttle resources.
 
-Project-specific documentation to be added in this repository:
+Project-specific documentation planned for this repository:
 
 - system architecture notes,
 - ASIC block descriptions,
@@ -247,20 +291,16 @@ Project-specific documentation to be added in this repository:
 
 ## Prerequisites
 
-Ensure your environment meets the following requirements:
+Ensure your environment includes:
 
 1. **Docker**  
-   [Linux](https://docs.docker.com/desktop/setup/install/linux/ubuntu/) | [Windows](https://docs.docker.com/desktop/setup/install/windows-install/) | [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
-
-2. **Python 3.8+** with `pip`
-
-3. **Git**
-
-4. Sufficient local disk space for:
-   - PDK installation,
+2. **Python 3.8+** with `pip`  
+3. **Git**  
+4. Enough disk space for:
+   - SKY130 PDK,
    - OpenLane,
-   - Caravel-lite dependencies,
-   - simulation artifacts.
+   - Caravel-lite,
+   - simulation and hardening outputs.
 
 ---
 
@@ -268,348 +308,7 @@ Ensure your environment meets the following requirements:
 
 ### 1. Repository Setup
 
-Create a new repository based on the `caravel_user_project` template and clone it locally:
-
 ```bash
 git clone <your-github-repo-URL>
 pip install chipfoundry-cli
 cd <project_name>
-```
-
-### 2. Project Initialization
-
-> [!IMPORTANT]
-> Run this first.
-
-```bash
-cf init
-```
-
-This creates `.cf/project.json` with project metadata. It must be run before any other commands such as:
-
-- `cf setup`
-- `cf gpio-config`
-- `cf harden`
-- `cf precheck`
-- `cf verify`
-
-### 3. Environment Setup
-
-Install the ChipFoundry CLI tool and set up the local environment:
-
-```bash
-cf setup
-```
-
-The `cf setup` command installs:
-
-- Caravel Lite
-- management core
-- OpenLane
-- SKY130 PDK
-- timing scripts for STA
-
-### 4. Add Project-Specific Files
-
-After initialization, start populating the repository with:
-
-- project RTL in `verilog/rtl/`
-- verification in `verilog/dv/`
-- macro configs in `openlane/`
-- docs and images in `docs/`
-- PCB files in `pcb/`
-- firmware in `firmware/`
-- mechanical CAD in `mechanical/`
-
----
-
-## Development Flow
-
-### Hardening the Design
-
-Hardening is the process of synthesizing your RTL and running place-and-route to generate a manufacturable GDSII layout.
-
-#### Macro Hardening
-
-Create a subdirectory for each custom macro under `openlane/`, each containing its configuration.
-
-```bash
-cf harden --list
-cf harden <macro_name>
-```
-
-Examples of project-specific macro names may include:
-
-- `sensor_ctrl`
-- `diag_mux`
-- `cfg_regs`
-- `user_project_wrapper`
-
-#### Integration
-
-Instantiate your module(s) in:
-
-```text
-verilog/rtl/user_project_wrapper.v
-```
-
-Update the wrapper OpenLane configuration to reference your macros:
-
-- `VERILOG_FILES_BLACKBOX`
-- `EXTRA_LEFS`
-- `EXTRA_GDS_FILES`
-
-#### Wrapper Hardening
-
-Once integration is complete:
-
-```bash
-cf harden user_project_wrapper
-```
-
----
-
-## GPIO Configuration
-
-Configure the power-on default configuration for each GPIO using the interactive CLI tool.
-
-```bash
-cf gpio-config
-```
-
-This command will:
-
-- configure GPIO pins interactively,
-- update `verilog/rtl/user_defines.v`,
-- generate GPIO defaults for simulation.
-
-### GPIO Notes for This Project
-
-This airflow-sensing project will likely require a mix of:
-
-- digital control pins,
-- optional serial interface pins,
-- diagnostic outputs,
-- analog-capable pins where permitted by the selected integration strategy.
-
-Example future pin usage may include:
-
-- SPI / I²C interface
-- interrupt / status
-- comparator outputs
-- analog test nodes
-- debug observability
-
-> **Note**
-> Final GPIO allocation should be documented in a dedicated section or separate file once the ASIC top-level is frozen.
-
----
-
-## Verification Plan
-
-The contest flow expects strong verification coverage. This repository will include:
-
-### 1. RTL Verification
-Run RTL simulation:
-
-```bash
-cf verify <test_name>
-```
-
-Run all tests:
-
-```bash
-cf verify --all
-```
-
-Planned RTL checks include:
-
-- register map access,
-- configuration sequencing,
-- state machine behavior,
-- mux control,
-- fault / status generation,
-- interface protocol handling.
-
-### 2. Gate-Level Verification
-Run gate-level simulation:
-
-```bash
-cf verify <test_name> --sim gl
-```
-
-Planned GL checks include:
-
-- post-synthesis functional equivalence,
-- wrapper-level integration,
-- timing-relevant behavior under gate-level netlists.
-
-### 3. Static Timing Analysis (STA)
-
-```bash
-make extract-parasitics
-make create-spef-mapping
-make caravel-sta
-```
-
-Run this if timing support scripts need refresh:
-
-```bash
-make setup-timing-scripts
-```
-
-### 4. Project-Specific System Validation
-Outside the pure RTL/GDS flow, system-level validation will also include:
-
-- PCB bring-up,
-- firmware-driven configuration,
-- airflow response testing,
-- calibration and repeatability measurements.
-
----
-
-## Local Precheck
-
-Before shuttle submission, run local precheck to verify repository and tapeout readiness.
-
-> [!IMPORTANT]
-> GPIO configuration is required before running precheck.
-
-```bash
-cf precheck
-```
-
-You can also run specific checks or skip LVS when appropriate:
-
-```bash
-cf precheck --disable-lvs
-cf precheck --checks license --checks makefile
-```
-
-Precheck should be part of the normal development cycle, not only a last-minute step.
-
----
-
-## Mechanical, PCB, and Firmware Deliverables
-
-A key part of this project is that it is **not only a silicon submission**. The final repository is intended to include open assets for the complete demonstrator.
-
-### PCB Deliverables
-Planned contents:
-
-- schematics,
-- layout source files,
-- BOM,
-- manufacturing outputs,
-- assembly notes,
-- bring-up checklist.
-
-### Firmware Deliverables
-Planned contents:
-
-- configuration interface,
-- register access helpers,
-- demo acquisition flow,
-- diagnostic routines,
-- calibration support.
-
-### Mechanical Deliverables
-Planned contents:
-
-- flow-body CAD,
-- enclosure / mounting geometry,
-- assembly guidance,
-- optional drawings or printable parts for prototyping.
-
----
-
-## Project Roadmap
-
-### Phase 1 — System Definition
-- finalize system partition,
-- define on-chip and off-chip boundaries,
-- define interfaces and pin budget,
-- capture top-level architecture.
-
-### Phase 2 — ASIC Development
-- implement digital configuration and control,
-- implement sensor support and diagnostics,
-- build verification benches,
-- integrate into the Caravel flow.
-
-### Phase 3 — PCB and Firmware
-- design support PCB,
-- implement firmware for control and data collection,
-- prepare bench test workflows.
-
-### Phase 4 — Mechanical Integration
-- finalize enclosure / flow path,
-- integrate PCB and transducer,
-- document assembly.
-
-### Phase 5 — Validation
-- electrical bring-up,
-- sensor-response characterization,
-- calibration procedure,
-- end-to-end demo preparation.
-
----
-
-## Checklist for Shuttle Submission
-
-Before final submission, confirm the following:
-
-### Repository
-- [ ] Public GitHub repository created from the correct template
-- [ ] README updated for this project
-- [ ] License selected and present
-- [ ] Documentation written in English
-- [ ] Project structure consistent with flow expectations
-
-### ASIC / Caravel
-- [ ] `cf init` completed
-- [ ] GPIO configuration completed
-- [ ] Custom macros hardened
-- [ ] `user_project_wrapper` integrated
-- [ ] Wrapper hardened successfully
-- [ ] LEF/GDS references updated
-- [ ] RTL tests passing
-- [ ] Gate-level tests passing
-- [ ] STA run and reviewed
-- [ ] `cf precheck` passing
-
-### Deliverables
-- [ ] GDSII committed or attached as required
-- [ ] PCB sources included
-- [ ] Firmware included
-- [ ] Mechanical files included
-- [ ] Demo instructions included
-- [ ] Images / diagrams added to docs
-
----
-
-## License
-
-This project is intended to use a permissive open-source license compatible with contest requirements.
-
-Current placeholder:
-
-- **Apache 2.0**
-
-Update this section if the project adopts another accepted license.
-
----
-
-## Acknowledgments
-
-This repository is based on the **Caravel User Project / ChipFoundry template** and adapts that flow to an open airflow sensing platform using custom SKY130 silicon.
-
-Additional acknowledgments may be added here for:
-
-- project collaborators,
-- institutions,
-- fabrication support,
-- PCB and mechanical contributors,
-- sensor development contributors.
-
----
