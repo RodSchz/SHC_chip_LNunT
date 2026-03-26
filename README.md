@@ -105,27 +105,16 @@ These values describe the existing prototype baseline and may evolve during the 
 
 ### 1. Current Prototype Assembly
 
-> Place your current product image at: `docs/img/prototype_sensor.jpg`
+> PCurrent product image: `docs/img/prototype_sensor.jpg`
 
 ![Prototype Assembly](docs/img/prototype_sensor.jpg)
 
-### 2. System Architecture Diagram
 
-> Place your architecture diagram at: `docs/img/system_architecture.png`
+### 2. Optional PCB Image
 
-![System Architecture](docs/img/system_architecture.png)
+> Optional: First PCB protptype: `docs/img/pcb_top.jpg`
 
-### 3. ASIC Partition / On-Chip vs Off-Chip Diagram
-
-> Place your partition diagram at: `docs/img/asic_partition.png`
-
-![ASIC Partition](docs/img/asic_partition.png)
-
-### 4. Optional PCB Image
-
-> Optional: place a PCB image at: `docs/img/pcb_top.jpg`
-
-![Support PCB](docs/img/pcb_top.jpg)
+![PCB](docs/img/pcb_top.jpg)
 
 ---
 
